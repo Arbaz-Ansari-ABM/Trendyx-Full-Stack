@@ -13,6 +13,7 @@ const shopAddressRouter = require("./routes/shop/address-routes");
 const shopOrderRouter = require("./routes/shop/order-routes");
 
 const shopReviewRouter = require("./routes/shop/review-routes");
+const shopSearchRouter = require("./routes/shop/search-routes");
 
 const commonFeatureRouter = require("./routes/common/feature-routes");
 
@@ -20,7 +21,7 @@ const commonFeatureRouter = require("./routes/common/feature-routes");
 //create a separate file for this and then import/use that file here
 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGODB_URL)
   .then(() => console.log("MongoDB connected"))
   .catch((error) => console.log(error));
 
@@ -29,7 +30,22 @@ const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: function (origin, callback) {
+      // Allow requests with no origin (mobile apps, etc.)
+      if (!origin) return callback(null, true);
+
+      const allowedOrigins = [
+        "http://localhost:5173", // Local development
+        "http://localhost:3000", // Alternative local port
+        process.env.FRONTEND_URL, // Production URL from environment variable
+      ].filter(Boolean);
+
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: [
       "Content-Type",
@@ -54,6 +70,7 @@ app.use("/api/shop/address", shopAddressRouter);
 app.use("/api/shop/order", shopOrderRouter);
 
 app.use("/api/shop/review", shopReviewRouter);
+app.use("/api/shop/search", shopSearchRouter);
 
 app.use("/api/common/feature", commonFeatureRouter);
 

@@ -25,8 +25,8 @@ const mockStripe = {
         charges: {
           data: [{
             id: `ch_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-            amount: 0, // Will be set by the calling function
-            currency: 'usd',
+            amount: params.amount || 0,
+            currency: params.currency || 'usd',
             status: 'succeeded'
           }]
         }
@@ -36,8 +36,10 @@ const mockStripe = {
 };
 
 // Use mock for demo, real Stripe if you have valid keys
-const stripeInstance = process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY.startsWith('sk_') 
-  ? stripe 
+const stripeInstance = process.env.STRIPE_SECRET_KEY &&
+  process.env.STRIPE_SECRET_KEY.startsWith('sk_') &&
+  !process.env.STRIPE_SECRET_KEY.includes('your_stripe_secret_key')
+  ? stripe
   : mockStripe;
 
 module.exports = stripeInstance;

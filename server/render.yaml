@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: trendyx-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: false
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URL
+        sync: false # Set in Render dashboard
+      - key: JWT_SECRET
+        sync: false # Set in Render dashboard
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false # Set in Render dashboard
+      - key: CLOUDINARY_API_KEY
+        sync: false # Set in Render dashboard
+      - key: CLOUDINARY_API_SECRET
+        sync: false # Set in Render dashboard
+      - key: STRIPE_SECRET_KEY
+        sync: false # Set in Render dashboard
+      - key: STRIPE_PUBLISHABLE_KEY
+        sync: false # Set in Render dashboard
